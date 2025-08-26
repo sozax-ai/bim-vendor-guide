@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIM Vendor Prequalification Guide - Middle East</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* SOZA Brand Colors - Dark Theme */
+            --soza-orange: hsl(22 100% 52%);
+            --very-dark-blue-gray: hsl(200 25% 8%);
+            --dark-card: hsl(200 20% 12%);
+            --light-teal: hsl(188 60% 63%);
+            --accent-teal: hsl(193 78% 45%);
+            --foreground: hsl(0 0% 100%);
+            --muted: hsl(193 30% 65%);
+            --border: hsl(200 15% 25%);
+            --destructive: hsl(0 84% 60%);
+            
+            /* Gradients */
+            --primary-gradient: linear-gradient(135deg, hsl(22 100% 52%), hsl(188 60% 63%));
+            --background-gradient: linear-gradient(135deg, hsl(200 25% 8%), hsl(188 78% 35%));
+            --card-gradient: linear-gradient(145deg, hsl(200 20% 12%), hsl(188 78% 35% / 0.1));
+            
+            /* Visual Effects */
+            --glow-shadow: 0 0 40px hsl(22 100% 52% / 0.3);
+            --card-shadow: 0 8px 32px hsl(200 25% 4% / 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-gradient);
+            color: var(--foreground);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            page-break-inside: avoid;
+        }
+        
+        .card {
+            background: var(--card-gradient);
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow), var(--glow-shadow);
+        }
+        
+        .primary-text {
+            color: var(--soza-orange);
+        }
+        
+        .accent-text {
+            color: var(--light-teal);
+        }
+        
+        .secondary-text {
+            color: var(--accent-teal);
+        }
+        
+        .muted-text {
+            color: var(--muted);
+        }
+        
+        .step-circle {
+            background: var(--primary-gradient);
+            color: var(--foreground);
+            box-shadow: var(--glow-shadow);
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 16px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--foreground);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--glow-shadow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-shadow), var(--card-shadow);
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .chart-container {
+            height: 400px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .progress-chart {
+            height: 250px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .player-card {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .player-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .player-logo {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .checkbox-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .checkbox-custom:checked {
+            background: var(--soza-orange);
+            border-color: var(--soza-orange);
+        }
+        
+        .checkbox-custom:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: hsl(200 25% 8% / 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--dark-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 16px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--soza-orange);
+            text-align: center;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--light-teal);
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        .checklist-item:hover {
+            background: hsl(188 78% 45% / 0.1);
+        }
+        
+        .checklist-content {
+            flex: 1;
+        }
+        
+        .checklist-label {
+            font-weight: 500;
+            color: var(--foreground);
+            margin-bottom: 4px;
+        }
+        
+        .checklist-evidence {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+        
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .card {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="section" style="text-align: center; padding: 40px 0;">
+            <h1>BIM Vendor Prequalification Guide</h1>
+            <p class="muted-text" style="font-size: 1.2rem; margin-top: 16px;">
+                Interactive Guide for Middle East Market Entry
+            </p>
+        </header>
+
+        <!-- Strategic Overview -->
+        <section class="section">
+            <h2>Strategic Approach to Market Entry</h2>
+            <p class="muted-text" style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">
+                Navigate the vendor prequalification landscape with a phased strategy that leverages centralized platforms and demonstrates robust BIM capabilities.
+            </p>
+            
+            <div class="grid-3">
+                <div class="card" style="text-align: center;">
+                    <div class="step-circle">1</div>
+                    <h3>Internal Readiness</h3>
+                    <p class="muted-text">Conduct thorough internal audit of BIM capabilities, legal documents, and financial records. A solid foundation is crucial before engaging with external portals.</p>
+                </div>
+                
+                <div class="card" style="text-align: center;">
+                    <div class="step-circle">2</div>
+                    <h3>Centralized Platforms</h3>
+                    <p class="muted-text">Prioritize registration on shared platforms like Achilles. The "one-to-many" model provides verified credibility and broad visibility efficiently.</p>
+                </div>
+                
+                <div class="card" style="text-align: center;">
+                    <div class="step-circle">3</div>
+                    <h3>Targeted Registration</h3>
+                    <p class="muted-text">With vetted profile established, proceed with direct registration on key NOCs and EPC portals, streamlining the process.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Players -->
+        <section class="section">
+            <h2>Key Players & Requirements</h2>
+            <p class="muted-text" style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">
+                Major National Oil Companies (NOCs) and Engineering, Procurement, and Construction (EPC) firms in the Middle East.
+            </p>
+            
+            <div class="grid-4" id="playersGrid">
+                <!-- Players will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Platform Comparison -->
+        <section class="section">
+            <h2>Centralized Vendor Platforms</h2>
+            <p class="muted-text" style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">
+                Compare shared platforms offering "one-registration-to-many" models that streamline prequalification processes.
+            </p>
+            
+            <div class="card">
+                <h3 style="text-align: center; margin-bottom: 24px;">Platform Filters</h3>
+                <div class="filter-container" id="platformFilters">
+                    <!-- Filters will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="chart-container">
+                    <canvas id="platformChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIM Checklist -->
+        <section class="section">
+            <h2>BIM Prequalification Checklist</h2>
+            <p class="muted-text" style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">
+                Interactive checklist for BIM-specific Pre-Qualification Questionnaire (PQQ) preparation with progress tracking.
+            </p>
+            
+            <div class="grid-2" style="align-items: start;">
+                <div class="card">
+                    <h3>PQQ Criteria & Evidence</h3>
+                    <div id="checklistItems">
+                        <!-- Checklist items will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="card" style="text-align: center;">
+                    <h3>Completion Progress</h3>
+                    <div class="progress-chart">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                    <div id="progressText" class="muted-text" style="margin-top: 16px; font-size: 1.1rem;">
+                        0% Complete (0/9 items)
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for Player Details -->
+    <div id="playerModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div id="modalContent">
+                <!-- Modal content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const playersData = {
+            'Saudi Aramco': {
+                logo: '🇸🇦',
+                focus: 'Saudi Arabia',
+                general: 'Robust company documentation, financial standing, and experience in oil & gas sector.',
+                specific: 'Cybersecurity Compliance Certificate (CCC) is mandatory. Strong emphasis on local content and Saudi Vision 2030 alignment.'
+            },
+            'ADNOC': {
+                logo: '🇦🇪',
+                focus: 'UAE (Abu Dhabi)',
+                general: 'Valid Abu Dhabi trade license, audited financial accounts, ISO certifications, industry experience, and client references.',
+                specific: 'Local presence or local agent required for non-UAE manufacturers. In-Country Value (ICV) certification important.'
+            },
+            'KPC/KOC': {
+                logo: '🇰🇼',
+                focus: 'Kuwait',
+                general: 'Focus on supporting SMEs. Submission through unified portal for approved vendor list.',
+                specific: 'New unified portal ktendering.com.kw centralizes all applications. Local partnership requirements.'
+            },
+            'NEOM': {
+                logo: '🏙️',
+                focus: 'Saudi Arabia (Megaproject)',
+                general: 'Business registration, follow-up questionnaire completion, and T&Cs acceptance.',
+                specific: 'Separate from standard Ariba account. Focus on innovative technologies and sustainable practices.'
+            },
+            'Petrofac': {
+                logo: '🇬🇧',
+                focus: 'Global (MENA Operations)',
+                general: 'Company profile, ISO 9001 certificate, and 3-year supply history.',
+                specific: 'Preliminary assessment determines eligibility. Strong focus on HSE and sustainability metrics.'
+            },
+            'Saipem': {
+                logo: '🇮🇹',
+                focus: 'Global (Energy Infrastructure)',
+                general: 'Structured five-step vendor management system including formal qualification.',
+                specific: 'SupplHi platform integration. Emphasis on digital capabilities and Industry 4.0 readiness.'
+            }
+        };
+
+        const platformsData = {
+            'Achilles': {
+                focus: 'Prequalification & Risk Management',
+                industries: 'Utilities, Oil & Gas, Construction',
+                benefit: 'Single rigorous prequalification provides vetted visibility to large buyer network',
+                cost: 'Annual subscription fee',
+                score: 95
+            },
+            'SupplHi': {
+                focus: 'Industrial Vendor Qualification',
+                industries: 'B2B Industrial, Oil & Gas, Engineering',
+                benefit: 'One-registration-to-many model for streamlined global visibility',
+                cost: 'Free for vendors',
+                score: 85
+            },
+            'Open-es': {
+                focus: 'ESG & Sustainability Performance',
+                industries: 'Industrial Supply Chains, Energy',
+                benefit: 'Specialized ESG demonstration channel for competitive advantage',
+                cost: 'Free for suppliers',
+                score: 75
+            }
+        };
+
+        const checklistData = [
+            {
+                category: 'Legal',
+                item: 'Company legal registration documents',
+                evidence: 'Valid Commercial Registration (CR) Certificate, Articles of Incorporation'
+            },
+            {
+                category: 'Financial',
+                item: 'Audited financial statements (2-3 years)',
+                evidence: 'Official audited financial reports, bank statements, credit ratings'
+            },
+            {
+                category: 'BIM Capability',
+                item: 'Native BIM file generation capability',
+                evidence: 'Project examples, software licenses, technical specifications'
+            },
+            {
+                category: 'Standards',
+                item: 'Formalized internal BIM standards',
+                evidence: 'BIM standards document, ISO 19650 compliance, quality procedures'
+            },
+            {
+                category: 'Execution',
+                item: 'BIM Execution Plan (BXP) processes',
+                evidence: 'Sample BXP from past projects, templates, workflows'
+            },
+            {
+                category: 'Personnel',
+                item: 'Qualified BIM personnel with defined roles',
+                evidence: 'Staff resumes, certifications, training records, organizational chart'
+            },
+            {
+                category: 'Security',
+                item: 'Data security and cybersecurity measures',
+                evidence: 'CCC certificate, ISO 27001, security policies, incident response plans'
+            },
+            {
+                category: 'Collaboration',
+                item: 'Collaborative workflows and data management',
+                evidence: 'CDE procedures, collaboration protocols, interoperability standards'
+            },
+            {
+                category: 'Track Record',
+                item: 'BIM project references and KPIs',
+                evidence: 'Detailed project portfolio, client testimonials, performance metrics'
+            }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            populatePlayers();
+            populatePlatformFilters();
+            populateChecklist();
+            renderPlatformChart();
+            updateProgressChart();
+        });
+
+        // Players functionality
+        function populatePlayers() {
+            const grid = document.getElementById('playersGrid');
+            Object.entries(playersData).forEach(([name, data]) => {
+                const card = document.createElement('div');
+                card.className = 'card player-card';
+                card.innerHTML = `
+                    <div class="player-logo">${data.logo}</div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 8px;">${name}</h3>
+                    <p class="muted-text" style="font-size: 0.9rem;">${data.focus}</p>
+                `;
+                card.onclick = () => openPlayerModal(name, data);
+                grid.appendChild(card);
+            });
+        }
+
+        function openPlayerModal(name, data) {
+            const modal = document.getElementById('playerModal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <h2 class="primary-text">${name}</h2>
+                <div style="margin: 24px 0;">
+                    <h4 class="accent-text" style="margin-bottom: 8px;">Geographical Focus</h4>
+                    <p class="muted-text">${data.focus}</p>
+                </div>
+                <div style="margin: 24px 0;">
+                    <h4 class="accent-text" style="margin-bottom: 8px;">General Requirements</h4>
+                    <p class="muted-text">${data.general}</p>
+                </div>
+                <div style="margin: 24px 0; padding: 16px; background: hsl(188 78% 45% / 0.1); border-radius: 8px; border: 1px solid hsl(188 78% 45% / 0.3);">
+                    <h4 class="accent-text" style="margin-bottom: 8px;">Key Specifics</h4>
+                    <p class="muted-text">${data.specific}</p>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('playerModal').classList.remove('active');
+        }
+
+        // Platform comparison functionality
+        let selectedPlatforms = new Set(Object.keys(platformsData));
+        let platformChart;
+
+        function populatePlatformFilters() {
+            const container = document.getElementById('platformFilters');
+            Object.keys(platformsData).forEach(name => {
+                const filterItem = document.createElement('div');
+                filterItem.className = 'filter-item';
+                filterItem.innerHTML = `
+                    <input type="checkbox" id="filter-${name}" class="checkbox-custom" checked onchange="togglePlatform('${name}')">
+                    <label for="filter-${name}" class="muted-text">${name}</label>
+                `;
+                container.appendChild(filterItem);
+            });
+        }
+
+        function togglePlatform(platform) {
+            if (selectedPlatforms.has(platform)) {
+                selectedPlatforms.delete(platform);
+            } else {
+                selectedPlatforms.add(platform);
+            }
+            renderPlatformChart();
+        }
+
+        function renderPlatformChart() {
+            const ctx = document.getElementById('platformChart').getContext('2d');
+            
+            const filteredData = Array.from(selectedPlatforms).map(name => ({
+                name,
+                ...platformsData[name]
+            }));
+
+            if (platformChart) {
+                platformChart.destroy();
+            }
+
+            platformChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: filteredData.map(p => p.name),
+                    datasets: [{
+                        label: 'Strategic Value Score',
+                        data: filteredData.map(p => p.score),
+                        backgroundColor: [
+                            'hsl(22 100% 52% / 0.8)',
+                            'hsl(188 60% 63% / 0.8)',
+                            'hsl(193 78% 45% / 0.8)'
+                        ],
+                        borderColor: [
+                            'hsl(22 100% 52%)',
+                            'hsl(188 60% 63%)',
+                            'hsl(193 78% 45%)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Platform Strategic Value Comparison',
+                            color: 'hsl(0 0% 100%)',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        tooltip: {
+                            backgroundColor: 'hsl(200 20% 12%)',
+                            titleColor: 'hsl(22 100% 52%)',
+                            bodyColor: 'hsl(0 0% 100%)',
+                            borderColor: 'hsl(200 15% 25%)',
+                            borderWidth: 1,
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const platform = filteredData[context.dataIndex];
+                                    return [
+                                        `Focus: ${platform.focus}`,
+                                        `Industries: ${platform.industries}`,
+                                        `Cost: ${platform.cost}`,
+                                        `Benefit: ${platform.benefit}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Strategic Value Score',
+                                color: 'hsl(0 0% 100%)'
+                            },
+                            ticks: { color: 'hsl(193 30% 65%)' },
+                            grid: { color: 'hsl(200 15% 25% / 0.5)' }
+                        },
+                        y: {
+                            ticks: { color: 'hsl(193 30% 65%)' },
+                            grid: { color: 'hsl(200 15% 25% / 0.5)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Checklist functionality
+        let progressChart;
+        let checkedCount = 0;
+
+        function populateChecklist() {
+            const container = document.getElementById('checklistItems');
+            checklistData.forEach((item, index) => {
+                const checklistItem = document.createElement('div');
+                checklistItem.className = 'checklist-item';
+                checklistItem.innerHTML = `
+                    <input type="checkbox" id="check-${index}" class="checkbox-custom" onchange="updateProgress()">
+                    <div class="checklist-content">
+                        <div class="checklist-label">${item.item}</div>
+                        <div class="checklist-evidence">Evidence: ${item.evidence}</div>
+                    </div>
+                `;
+                container.appendChild(checklistItem);
+            });
+        }
+
+        function updateProgress() {
+            checkedCount = document.querySelectorAll('#checklistItems input:checked').length;
+            const total = checklistData.length;
+            const percentage = Math.round((checkedCount / total) * 100);
+            
+            document.getElementById('progressText').textContent = 
+                `${percentage}% Complete (${checkedCount}/${total} items)`;
+            
+            updateProgressChart();
+        }
+
+        function updateProgressChart() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            const total = checklistData.length;
+            const remaining = total - checkedCount;
+
+            const data = {
+                labels: ['Completed', 'Remaining'],
+                datasets: [{
+                    data: [checkedCount, remaining],
+                    backgroundColor: [
+                        'hsl(22 100% 52%)',
+                        'hsl(200 15% 25%)'
+                    ],
+                    borderColor: [
+                        'hsl(22 100% 52%)',
+                        'hsl(200 15% 25%)'
+                    ],
+                    borderWidth: 2
+                }]
+            };
+
+            if (progressChart) {
+                progressChart.data = data;
+                progressChart.update();
+            } else {
+                progressChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    color: 'hsl(0 0% 100%)',
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'hsl(200 20% 12%)',
+                                titleColor: 'hsl(22 100% 52%)',
+                                bodyColor: 'hsl(0 0% 100%)',
+                                borderColor: 'hsl(200 15% 25%)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label;
+                                        const value = context.raw;
+                                        const percentage = ((value / total) * 100).toFixed(0);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('playerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
